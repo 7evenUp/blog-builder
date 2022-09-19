@@ -45,7 +45,8 @@
          <AutoFocusPlugin />
          <ClearEditorPlugin />
          <AutoLinkPlugin />
-         <AutoScrollPlugin scrollRef={scrollRef} />
+         <AutoScrollPlugin scrollRef={scrollRef}
+        />
         <>
           <HistoryPlugin />
           <RichTextPlugin

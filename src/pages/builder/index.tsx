@@ -1,16 +1,10 @@
 import { NextPage } from 'next'
-import Editor from './Editor'
+import Editor from './newEditor'
 
 interface Props {}
 
 const Builder: NextPage<Props> = ({}) => {
-  const savePost = () => {
-    console.log('Saved')
-  }
-
-  const uploadPost = () => {
-    console.log('Uploaded')
-  }
+  
 
   return (
     <main className="container mx-auto flex flex-col items-center justify-between min-h-screen p-4 gap-8">
@@ -18,20 +12,7 @@ const Builder: NextPage<Props> = ({}) => {
 
       <Editor />
 
-      <div className="flex gap-2 self-end">
-        <button
-          className="border rounded-md text-lg py-1 px-3 hover:bg-cyan-600 duration-200 hover:text-white"
-          onClick={savePost}
-        >
-          Save
-        </button>
-        <button
-          className="border rounded-md text-lg py-1 px-3 hover:bg-cyan-600 duration-200 hover:text-white"
-          onClick={uploadPost}
-        >
-          Post
-        </button>
-      </div>
+      
 
       
     </main>
