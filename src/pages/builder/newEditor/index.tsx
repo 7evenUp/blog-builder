@@ -30,6 +30,8 @@ function onChange(editorState) {
     const selection = $getSelection();
     console.log('NODEs', selection?.getNodes())
 
+    root.
+
     console.log(root, selection);
   });
 }
