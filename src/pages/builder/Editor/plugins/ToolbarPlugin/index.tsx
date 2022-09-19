@@ -1,7 +1,7 @@
 import type {InsertImagePayload} from '../ImagesPlugin';
 import type {LexicalEditor} from 'lexical';
  
-import './index.module.css';
+import styles from './index.module.css';
  
 import {
   $createCodeNode,
@@ -137,7 +137,7 @@ import {INSERT_IMAGE_COMMAND} from '../ImagesPlugin';
          value={altText}
          data-test-id="image-modal-alt-text-input"
        />
-       <div className="ToolbarPlugin__dialogActions">
+       <div className={styles.ToolbarPlugin__dialogActions}>
          <Button
            data-test-id="image-modal-confirm-btn"
            disabled={isDisabled}
@@ -216,7 +216,7 @@ import {INSERT_IMAGE_COMMAND} from '../ImagesPlugin';
    return (
      <>
        {!mode && (
-         <div className="ToolbarPlugin__dialogButtonsList">
+         <div className={styles.ToolbarPlugin__dialogButtonsList}>
            <Button
              data-test-id="image-modal-option-file"
              onClick={() => setMode('file')}>

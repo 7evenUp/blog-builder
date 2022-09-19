@@ -7,7 +7,7 @@
  *
  */
 
- .Modal__overlay {
+.Modal__overlay {
   display: flex;
   justify-content: center;
   align-items: center;

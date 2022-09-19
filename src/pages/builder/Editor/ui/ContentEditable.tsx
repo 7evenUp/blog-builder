@@ -6,7 +6,7 @@
  *
  */
 
- import './ContentEditable.module.css';
+ import styles from './ContentEditable.module.css';
 
  import {ContentEditable} from '@lexical/react/LexicalContentEditable';
  import * as React from 'react';
@@ -16,5 +16,5 @@
  }: {
    className?: string;
  }): JSX.Element {
-   return <ContentEditable className={className || 'ContentEditable__root'} />;
+   return <ContentEditable className={className || styles.ContentEditable__root} />;
  }

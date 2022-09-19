@@ -6,7 +6,7 @@
  *
  */
 
- import './Input.module.css';
+ import styles from './Input.module.css';
 
  import * as React from 'react';
  
@@ -24,12 +24,12 @@
    'data-test-id': dataTestId,
  }: Props): JSX.Element {
    return (
-     <div className="Input__wrapper">
-       <label className="Input__label">{label}</label>
+     <div className={styles.Input__wrapper}>
+       <label className={styles.Input__label}>{label}</label>
        <input
          type="file"
          accept={accept}
-         className="Input__input"
+         className={styles.Input__input}
          onChange={(e) => onChange(e.target.files)}
          data-test-id={dataTestId}
        />

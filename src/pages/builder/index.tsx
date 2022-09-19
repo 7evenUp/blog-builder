@@ -16,9 +16,11 @@ const Builder: NextPage<Props> = ({}) => {
     <main className="container mx-auto flex flex-col items-center justify-between min-h-screen p-4 gap-8">
       <h1 className="text-5xl text-gray-700 font-medium">Builder</h1>
 
-      <Editor />
+      <div className="editor-shell">
+        <Editor />
+      </div>
 
-      <div className="flex gap-2 self-end">
+      {/* <div className="flex gap-2 self-end">
         <button
           className="border rounded-md text-lg py-1 px-3 hover:bg-cyan-600 duration-200 hover:text-white"
           onClick={savePost}
@@ -31,7 +33,7 @@ const Builder: NextPage<Props> = ({}) => {
         >
           Post
         </button>
-      </div>
+      </div> */}
 
       
     </main>
