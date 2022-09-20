@@ -206,7 +206,7 @@ import {INSERT_IMAGE_COMMAND} from '../ImagesPlugin';
    activeEditor: LexicalEditor;
    onClose: () => void;
  }): JSX.Element {
-   const [mode, setMode] = useState<null | 'url' | 'file'>(null);
+   const [mode, setMode] = useState<null | 'file'>(null);
  
    const onClick = (payload: InsertImagePayload) => {
      activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
@@ -224,7 +224,6 @@ import {INSERT_IMAGE_COMMAND} from '../ImagesPlugin';
            </Button>
          </div>
        )}
-       {mode === 'url' && <InsertImageUriDialogBody onClick={onClick} />}
        {mode === 'file' && <InsertImageUploadedDialogBody onClick={onClick} />}
      </>
    );

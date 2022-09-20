@@ -78,7 +78,7 @@ export default function Editor(): JSX.Element {
         onClick={() => {
           if (editorStateRef.current) {
             const json = JSON.stringify(editorStateRef.current);
-            console.log(JSON.parse(json));
+            console.log(json);
           }
         }}
       >
