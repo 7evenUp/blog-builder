@@ -159,6 +159,7 @@ import {INSERT_IMAGE_COMMAND} from '../ImagesPlugin';
  
    const isDisabled = src === '';
  
+    // TO-DO Change src loading
    const loadImage = (files: FileList | null) => {
      const reader = new FileReader();
      reader.onload = function () {
