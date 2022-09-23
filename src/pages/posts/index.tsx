@@ -4,7 +4,8 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import { useEffect } from "react";
+import Image from "next/image";
+import React, { useEffect } from "react";
 import useSWR from 'swr';
 import { parseData } from "./utils/parseData";
 
@@ -63,13 +64,18 @@ const renderData = (rootElement, key) => {
         break;
     }
   }
-  else if (rootElement.type === 'paragraph') return <p>{rootElement.children.map(renderParagraph)}</p>
+  else if (rootElement.type === 'paragraph') return renderParagraph(rootElement)
   else if (rootElement.type === 'horizontalrule') return <div className="h-1 w-full bg-slate-700"></div>
   else return <span>Not heading</span>
 }
 
-const renderParagraph = ((textEl, key) => {
-  if (textEl.format === 0) return textEl.text
+const renderParagraph = (rootElement) => {
+  if (rootElement.direction === null) return renderImage(rootElement)
+  return <p>{rootElement.children.map(renderParagraphChildren)}</p>
+}
+
+const renderParagraphChildren = ((textEl, key) => {
+  if (textEl.format === 0) return <React.Fragment>{textEl.text}</React.Fragment>
   else if (textEl.format === 1) return <b>{textEl.text}</b>
   else if (textEl.format === 2) return <i>{textEl.text}</i>
   else if (textEl.format === 4) return <span className="line-through">{textEl.text}</span>
@@ -82,3 +88,7 @@ const renderParagraph = ((textEl, key) => {
   // <sub>
   // <sup>
 })
+
+const renderImage = (rootElement) => {
+  return <Image src={rootElement.children[0].src} alt={rootElement.children[0].atlText} width={500} height={300}/>
+}
