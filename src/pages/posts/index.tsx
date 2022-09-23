@@ -65,12 +65,18 @@ const renderData = (rootElement, key) => {
     }
   }
   else if (rootElement.type === 'paragraph') return renderParagraph(rootElement)
+  // else if (rootElement.type === 'list') return renderList(rootElement)
+  // else if (rootElement.type === 'quote') return renderList(rootElement)
+  // else if (rootElement.type === 'code') return renderList(rootElement)
   else if (rootElement.type === 'horizontalrule') return <div className="h-1 w-full bg-slate-700"></div>
   else return <span>Not heading</span>
 }
 
 const renderParagraph = (rootElement) => {
   if (rootElement.direction === null) return renderImage(rootElement)
+  else if (rootElement.format === "left") return <p className="text-left">{rootElement.children.map(renderParagraphChildren)}</p>
+  else if (rootElement.format === "center") return <p className="text-center">{rootElement.children.map(renderParagraphChildren)}</p>
+  else if (rootElement.format === "right") return <p className="text-right">{rootElement.children.map(renderParagraphChildren)}</p>
   return <p>{rootElement.children.map(renderParagraphChildren)}</p>
 }
 
@@ -82,13 +88,12 @@ const renderParagraphChildren = ((textEl, key) => {
   else if (textEl.format === 8) return <span className="underline">{textEl.text}</span>
   else if (textEl.format === 32) return <sub>{textEl.text}</sub>
   else if (textEl.format === 64) return <sup>{textEl.text}</sup>
-  else if (textEl.format === "left") return <span className="text-left">{textEl.text}</span>
-  else if (textEl.format === "center") return <span className="text-center">{textEl.text}</span>
-  else if (textEl.format === "right") return <span className="text-right">{textEl.text}</span>
-  // <sub>
-  // <sup>
 })
 
 const renderImage = (rootElement) => {
   return <Image src={rootElement.children[0].src} alt={rootElement.children[0].atlText} width={500} height={300}/>
+}
+
+const renderList = (rootElement) => {
+  return <ul><li>1</li></ul>
 }
