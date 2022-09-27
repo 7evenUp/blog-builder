@@ -5,8 +5,9 @@ import {
   NextApiResponse,
 } from "next";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from 'swr';
+import { PostsData, PostStateData } from "./types";
 import { parseData } from "./utils/parseData";
 
 const fetcher = (url:string) => fetch(url).then((res) => res.json());
@@ -15,14 +16,15 @@ interface Props {}
 
 const Posts: NextPage<Props> = () => {
   const {data, error} = useSWR('/api/staticdata', fetcher)
-  let parsedData
+  const [parsedData, setParsedData] = useState<PostsData>([])
 
   useEffect(() => {
     if (data) {
-      parsedData = parseData(data)
-      console.log(parsedData)
+      console.log("1: ", parseData(data))
+      setParsedData(parseData(data))
+      console.log('2: ', parsedData)
     }
-  }, [data, parsedData])
+  }, [data])
 
   return (
     <div className="flex flex-col items-center gap-8 bg-slate-200 min-h-screen">
@@ -33,11 +35,7 @@ const Posts: NextPage<Props> = () => {
           {error && <span>Failed to load</span>}
           {!data ? <span>Loading...</span> : (
             <div className="flex flex-col border rounded-lg w-full">
-              {/* {parsedData && parsedData[0].type === 'heading' && parsedData[0].tag === 'h1' && (
-                <h1>abc{parsedData[0].children[0].text}</h1>
-              )} */}
-              {/* {parsedData && <h1>Data</h1>} */}
-              {JSON.parse(data).root.children.map(renderData)}
+              {parsedData.map(renderData)}
             </div>
           )}
         </div>
@@ -48,7 +46,7 @@ const Posts: NextPage<Props> = () => {
 
 export default Posts;
 
-const renderData = (rootElement, key) => {
+const renderData = (rootElement: PostStateData, key) => {
   if (rootElement.type === 'heading') {
     switch (rootElement.tag) {
       case 'h1':
@@ -72,7 +70,7 @@ const renderData = (rootElement, key) => {
   else return <span>Not heading</span>
 }
 
-const renderParagraph = (rootElement) => {
+const renderParagraph = (rootElement: PostStateData) => {
   if (rootElement.direction === null) return renderImage(rootElement)
   else if (rootElement.format === "left") return <p className="text-left">{rootElement.children.map(renderParagraphChildren)}</p>
   else if (rootElement.format === "center") return <p className="text-center">{rootElement.children.map(renderParagraphChildren)}</p>
