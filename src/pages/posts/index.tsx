@@ -34,7 +34,7 @@ const Posts: NextPage<Props> = () => {
         <div className="w-full">
           {error && <span>Failed to load</span>}
           {!data ? <span>Loading...</span> : (
-            <div className="flex flex-col border rounded-lg w-full">
+            <div className="flex flex-col gap-1 border rounded-lg w-full">
               {parsedData.map(renderData)}
             </div>
           )}
