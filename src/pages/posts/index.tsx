@@ -48,25 +48,15 @@ export default Posts;
 
 const renderData = (rootElement: PostDataType, key: number) => {
   if (rootElement.type === 'heading') {
-    switch (rootElement.tag) {
-      case 'h1':
-        return <h1 className="text-2xl">{rootElement.children[0]?.text}</h1>
-
-      case 'h2':
-        return <h2 className="text-xl">{rootElement.children[0]?.text}</h2>
-
-      case 'h3':
-        return <h3 className="text-lg">{rootElement.children[0]?.text}</h3>
-    
-      default:
-        break;
-    }
+    if (rootElement.tag === 'h1') return <h1 className="text-2xl">{rootElement.children[0]?.text}</h1>
+    else if (rootElement.tag === 'h2') return <h2 className="text-xl">{rootElement.children[0]?.text}</h2>
+    else if (rootElement.tag === 'h3') return <h3 className="text-lg">{rootElement.children[0]?.text}</h3>
   }
   else if (rootElement.type === 'paragraph') return renderParagraph(rootElement)
   else if (rootElement.type === 'list') return renderList(rootElement)
   else if (rootElement.type === 'quote') return renderBlockquote(rootElement)
   else if (rootElement.type === 'code') return renderCode(rootElement)
-  else if (rootElement.type === 'horizontalrule') return <div className="h-1 w-full bg-slate-700"></div>
+  else if (rootElement.type === 'horizontalrule') return <div className="w-full h-px my-8 bg-slate-400"></div>
   else return <span>Not heading</span>
 }
 
@@ -89,13 +79,21 @@ const renderParagraphChildren = ((textEl: PostParagraphType, key: number) => {
 })
 
 const renderImage = (imageElement: PostImageType) => {
-  return <Image src={imageElement.src} alt={imageElement.altText} width={500} height={300}/>
+  return <Image
+          className="my-8"
+          src={imageElement.src}
+          alt={imageElement.altText}
+          width={500}
+          height={300}
+          objectFit="cover"
+          layout="responsive"
+        />
 }
 
 const renderList = (rootElement: PostDataType) => {
   if (rootElement.listType === 'bullet') {
     return (
-      <ul>
+      <ul className="list-disc list-inside ml-4">
         {rootElement.children.map((el, key) => {
           return <li>{el.children.map(renderParagraphChildren)}</li>
         })}
@@ -104,7 +102,7 @@ const renderList = (rootElement: PostDataType) => {
   }
   else if (rootElement.listType === 'number') {
     return (
-      <ol>
+      <ol className="list-decimal list-inside ml-4">
         {rootElement.children.map((el, key) => {
           return <li>{el.children?.map(renderParagraphChildren)}</li>
         })}
@@ -114,24 +112,13 @@ const renderList = (rootElement: PostDataType) => {
   else if (rootElement.listType === 'check') {
     return (
       <div>
-        {rootElement.children.map((el, key) => {
-          if (el.checked) {
-            return (
-              <div className="flex gap-2 items-center">
-                <span className="border rounded w-5 h-5 border-cyan-400 block"/>
-                {el.children?.map(renderParagraphChildren)}
-              </div>
-            )
-          }
-          else {
-            return (
-              <div className="flex gap-2 items-center">
-                <span className="border rounded w-5 h-5 border-slate-400 block"/>
-                {el.children?.map(renderParagraphChildren)}
-              </div>
-            )
-          }
-        })}
+        {rootElement.children.map((el, key) => (
+          <div className="flex gap-2 items-center">
+            <span className={`border rounded w-5 h-5 block ${el.checked ? 'border-cyan-400' : 'border-slate-400'}`}/>
+            {el.children?.map(renderParagraphChildren)}
+          </div>
+          )
+        )}
       </div>
     )
   }

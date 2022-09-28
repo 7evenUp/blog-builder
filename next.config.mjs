@@ -21,6 +21,6 @@ export default defineNextConfig({
     defaultLocale: "en",
   },
   images: {
-    domains: ['media.istockphoto.com'],
+    domains: ['images.unsplash.com'],
   },
 });
