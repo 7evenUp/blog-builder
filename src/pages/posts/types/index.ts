@@ -23,6 +23,7 @@ export type PostDataType = {
 export type PostParagraphType = {
   format: 0 | 1 | 2 | 4 | 8 | 32 | 64
   text: string
+  type: 'text' | 'link' | 'linebreak'
 }
 
 export type PostImageType = {

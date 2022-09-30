@@ -27,7 +27,7 @@ const Posts: NextPage<Props> = () => {
   }, [data])
 
   return (
-    <div className="flex flex-col items-center gap-8 bg-slate-200 min-h-screen">
+    <div className="flex flex-col items-center gap-8 bg-slate-200 min-h-screen w-3/5 mx-auto">
       <h1 className="text-5xl">Posts</h1>
       <div className="w-full">
         <h2>Content goes here</h2>
@@ -69,6 +69,8 @@ const renderParagraph = (rootElement: PostDataType) => {
 }
 
 const renderParagraphChildren = ((textEl: PostParagraphType, key: number) => {
+  if (textEl.type === 'linebreak') return <br />
+  else if (textEl.type === 'link') return <a className="underline underline-offset-2 text-cyan-500" href={textEl.url} target="_blank" rel="noopener">{textEl.children[0].text}</a>
   if (textEl.format === 0) return <React.Fragment>{textEl.text}</React.Fragment>
   else if (textEl.format === 1) return <b>{textEl.text}</b>
   else if (textEl.format === 2) return <i>{textEl.text}</i>
