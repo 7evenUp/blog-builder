@@ -21,9 +21,13 @@ export type PostDataType = {
 }
 
 export type PostParagraphType = {
+  type: 'text' | 'link' | 'linebreak'
+  url?: string
+}
+
+export type TextNodeType = {
   format: 0 | 1 | 2 | 4 | 8 | 32 | 64
   text: string
-  type: 'text' | 'link' | 'linebreak'
 }
 
 export type PostImageType = {
@@ -32,9 +36,9 @@ export type PostImageType = {
 }
 
 export type PostListType = {
+  listType: 'bullet' | 'number' | 'check'
   children: Array<{
-    format: 0 | 1 | 2 | 4 | 8 | 32 | 64
-    text: string
+    children: Array<TextNodeType>
+    type: 'listitem'
   }>
-  type: 'listitem'
 }

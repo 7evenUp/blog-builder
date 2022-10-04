@@ -1,13 +1,10 @@
 import {
-  GetServerSideProps,
   NextPage,
-  NextApiRequest,
-  NextApiResponse,
 } from "next";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import useSWR from 'swr';
-import { PostParagraphType, PostsDataType, PostDataType, PostImageType, PostListType } from "./types";
+import { PostParagraphType, PostsDataType, PostDataType, PostImageType, TextNodeType, PostListType } from "./types";
 import { parseData } from "./utils/parseData";
 
 const fetcher = (url:string) => fetch(url).then((res) => res.json());
@@ -30,7 +27,6 @@ const Posts: NextPage<Props> = () => {
     <div className="flex flex-col items-center gap-8 bg-slate-200 min-h-screen w-3/5 mx-auto">
       <h1 className="text-5xl">Posts</h1>
       <div className="w-full">
-        <h2>Content goes here</h2>
         <div className="w-full">
           {error && <span>Failed to load</span>}
           {!data ? <span>Loading...</span> : (
@@ -68,17 +64,21 @@ const renderParagraph = (rootElement: PostDataType) => {
   return <p>{rootElement.children.map(renderParagraphChildren)}</p>
 }
 
-const renderParagraphChildren = ((textEl: PostParagraphType, key: number) => {
+const renderParagraphChildren = ((textEl: PostParagraphType & TextNodeType, key: number) => {
   if (textEl.type === 'linebreak') return <br />
   else if (textEl.type === 'link') return <a className="underline underline-offset-2 text-cyan-500" href={textEl.url} target="_blank" rel="noopener">{textEl.children[0].text}</a>
-  if (textEl.format === 0) return <React.Fragment>{textEl.text}</React.Fragment>
-  else if (textEl.format === 1) return <b>{textEl.text}</b>
-  else if (textEl.format === 2) return <i>{textEl.text}</i>
-  else if (textEl.format === 4) return <span className="line-through">{textEl.text}</span>
-  else if (textEl.format === 8) return <span className="underline">{textEl.text}</span>
-  else if (textEl.format === 32) return <sub>{textEl.text}</sub>
-  else if (textEl.format === 64) return <sup>{textEl.text}</sup>
+  else if (textEl.type === 'text') return renderTextNode(textEl)
 })
+
+const renderTextNode = (textNode: TextNodeType) => {
+  if (textNode.format === 0) return <React.Fragment>{textNode.text}</React.Fragment>
+  else if (textNode.format === 1) return <b>{textNode.text}</b>
+  else if (textNode.format === 2) return <i>{textNode.text}</i>
+  else if (textNode.format === 4) return <span className="line-through">{textNode.text}</span>
+  else if (textNode.format === 8) return <span className="underline">{textNode.text}</span>
+  else if (textNode.format === 32) return <sub>{textNode.text}</sub>
+  else if (textNode.format === 64) return <sup>{textNode.text}</sup>
+}
 
 const renderImage = (imageElement: PostImageType) => {
   return <Image
@@ -92,12 +92,12 @@ const renderImage = (imageElement: PostImageType) => {
         />
 }
 
-const renderList = (rootElement: PostDataType) => {
+const renderList = (rootElement: PostListType) => {
   if (rootElement.listType === 'bullet') {
     return (
       <ul className="list-disc list-inside ml-4">
         {rootElement.children.map((el, key) => {
-          return <li>{el.children.map(renderParagraphChildren)}</li>
+          return <li>{el.children?.map(renderParagraphChildren)}</li>
         })}
       </ul>
     )
@@ -138,13 +138,19 @@ const renderCode = (rootElement) => {
   return (
     <pre>
       {rootElement.children.map((el, key) => {
-        if (el.highlightType) {
-          if (el.highlightType === "keyword") return <span className="text-red-400">{el.text}</span>
-          else if (el.highlightType === "operator") return <span className="text-orange-400">{el.text}</span>
-          else if (el.highlightType === "string") return <span className="text-green-400">{el.text}</span>
-        }
-        else {
-          return el.text
+        if (el.type === 'linebreak') return <br />
+        else if (el.type === 'code-highlight') {
+          if (el.highlightType) {
+            if (el.highlightType === "keyword") return <span className="text-red-400">{el.text}</span>
+            else if (el.highlightType === "operator") return <span className="text-orange-400">{el.text}</span>
+            else if (el.highlightType === "string") return <span className="text-green-400">{el.text}</span>
+            else if (el.highlightType === "punctuation") return <span className="text-green-400">{el.text}</span>
+            else if (el.highlightType === "constant") return <span className="text-amber-300">{el.text}</span>
+            else if (el.highlightType === "function-variable") return <span className="text-purple-200">{el.text}</span>
+          }
+          else {
+            return el.text
+          }
         }
       })}
     </pre>
