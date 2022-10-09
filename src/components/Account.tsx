@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabaseClient'
+import Avatar from './Avatar'
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true)
@@ -81,12 +82,20 @@ export default function Account({ session }) {
   }
 
   return (
-    <div className="form-widget">
-      <div>
+    <div className="flex flex-col gap-2">
+      <Avatar
+        url={avatar_url}
+        size={150}
+        onUpload={url => {
+          setAvatarUrl(url)
+          updateProfile({username, website, avatar_url: url})
+        }}
+      />
+      <div className="flex gap-2">
         <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={session.user.email} disabled />
+        <input id="email" type="text" value={session.user.email} disabled className="w-full" />
       </div>
-      <div>
+      <div className="flex gap-2">
         <label htmlFor="username">Name</label>
         <input
           id="username"
@@ -95,7 +104,7 @@ export default function Account({ session }) {
           onChange={(e) => setUsername(e.target.value)}
         />
       </div>
-      <div>
+      <div className="flex gap-2">
         <label htmlFor="website">Website</label>
         <input
           id="website"
@@ -107,7 +116,7 @@ export default function Account({ session }) {
 
       <div>
         <button
-          className="button primary block"
+          className="border rounded p-2 bg-slate-100"
           onClick={() => updateProfile({ username, website, avatar_url })}
           disabled={loading}
         >
@@ -117,7 +126,7 @@ export default function Account({ session }) {
 
       <div>
         <button
-          className="button block"
+          className="border rounded p-2 bg-slate-100"
           onClick={() => supabase.auth.signOut()}
         >
           Sign Out
