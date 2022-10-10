@@ -11,6 +11,11 @@
   "dependencies": {
     "@lexical/react": "^0.4.1",
     "@supabase/supabase-js": "^2.0.0-rc.10",
+    "@tanstack/react-query": "^4.10.3",
+    "@trpc/client": "^10.0.0-proxy-beta.17",
+    "@trpc/next": "^10.0.0-proxy-beta.17",
+    "@trpc/react": "^10.0.0-proxy-beta.17",
+    "@trpc/server": "^10.0.0-proxy-beta.17",
     "lexical": "^0.4.1",
     "lodash-es": "^4.17.21",
     "next": "12.2.5",
