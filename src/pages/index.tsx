@@ -5,15 +5,16 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabaseClient'
 import Auth from '../components/Auth'
 import Account from '../components/Account'
+import { Session } from "@supabase/supabase-js";
 
 const Home: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [session, setSession] = useState(null)
+  const [session, setSession] = useState<Session | null>(null)
 
   useEffect(() => {
     let mounted = true
 
-    async function getInitialSession() {
+    const getInitialSession = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession()
@@ -30,7 +31,7 @@ const Home: NextPage = () => {
 
     getInitialSession()
 
-    const { subscription } = supabase.auth.onAuthStateChange(
+    const { data } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session)
       }
@@ -39,7 +40,7 @@ const Home: NextPage = () => {
     return () => {
       mounted = false
 
-      subscription?.unsubscribe()
+      data.subscription.unsubscribe()
     }
   }, [])
 

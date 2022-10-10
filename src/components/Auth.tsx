@@ -5,7 +5,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
 
-  const handleLogin = async email => {
+  const handleLogin = async (email: string) => {
     try {
       setLoading(true)
       const { error } = await supabase.auth.signInWithOtp({email})
@@ -19,15 +19,15 @@ const Auth = () => {
   }
 
   return (
-    <div className="row flex-center flex">
-      <div className="col-6 form-widget">
-        <h1 className="header">Supabase + Next.js</h1>
-        <p className="description">
+    <div className="flex justify-center">
+      <div className="flex flex-col items-center gap-6">
+        <h1 className="text-5xl">Supabase + Next.js</h1>
+        <p className="text-slate-500">
           Sign in via magic link with your email below
         </p>
         <div>
           <input
-            className="inputField"
+            className="p-2 rounded-lg"
             type="email"
             placeholder="Your email"
             value={email}
@@ -40,7 +40,7 @@ const Auth = () => {
               e.preventDefault()
               handleLogin(email)
             }}
-            className="button block"
+            className="border rounded bg-slate-50 p-2"
             disabled={loading}
           >
             <span>{loading ? 'Loading' : 'Send magic link'}</span>

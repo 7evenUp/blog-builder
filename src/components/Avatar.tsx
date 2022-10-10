@@ -1,30 +1,36 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { supabase } from '../utils/supabaseClient'
 
-export default function Avatar({ url, size, onUpload }) {
-  const [avatarUrl, setAvatarUrl] = useState(null)
+type AvatarTypes = {
+  url: string
+  size: number
+  onUpload: (url: string) => void
+}
+
+export default function Avatar({ url, size, onUpload }: AvatarTypes) {
+  const [avatarUrl, setAvatarUrl] = useState("")
   const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     if (url) downloadImage(url)
   }, [url])
 
-  async function downloadImage(path) {
+  const downloadImage = async (path: string) => {
     try {
       const { data, error } = await supabase.storage
         .from('avatars')
         .download(path)
-      if (error) {
-        throw error
-      }
+
+      if (error) throw error
+
       const url = URL.createObjectURL(data)
       setAvatarUrl(url)
     } catch (error) {
-      console.log('Error downloading image: ', error.message)
+      console.log('Error downloading image: ', error)
     }
   }
 
-  async function uploadAvatar(event) {
+  const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       setUploading(true)
 
@@ -33,21 +39,22 @@ export default function Avatar({ url, size, onUpload }) {
       }
 
       const file = event.target.files[0]
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${Math.random()}.${fileExt}`
-      const filePath = `${fileName}`
+      if (file) {
+        const fileExt = file.name.split('.').pop()
+        const filePath = `${Math.random()}.${fileExt}`
 
-      let { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file)
+        let { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, file)
 
-      if (uploadError) {
-        throw uploadError
+        if (uploadError) {
+          throw uploadError
+        }
+
+        onUpload(filePath)
       }
-
-      onUpload(filePath)
     } catch (error) {
-      alert(error.message)
+      alert(error)
     } finally {
       setUploading(false)
     }
