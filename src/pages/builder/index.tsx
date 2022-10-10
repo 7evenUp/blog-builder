@@ -21,8 +21,10 @@ const Builder: NextPage<Props> = ({}) => {
       .insert([
         { heading: 'New Post1' },
       ])
+      .select('id')
+      .single()
     if (error) console.error(error)
-    console.log(data)
+    console.log(data?.id)
   } 
 
   return (
