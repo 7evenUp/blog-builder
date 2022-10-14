@@ -23,22 +23,6 @@ const Builder: NextPage<Props> = ({}) => {
     loadPosts()
   }, [])
 
-  useEffect(() => {
-    // const subscribe = () => {
-      supabase
-        .channel('*')
-        .on('postgres_changes', { event: 'DELETE', schema: '*' }, payload => {
-          console.log('Change received!', payload)
-          console.log('Posts', posts)
-          setPosts(posts.filter(post => post.id !== payload.old.id)) 
-        })
-        .subscribe()
-    // }
-    
-    // subscribe()
-    return () => {supabase.removeAllChannels()}
-  }, [posts])
-
   const savePost = () => {
     console.log('Saved')
   }
@@ -83,6 +67,7 @@ const Builder: NextPage<Props> = ({}) => {
       <div className="flex gap-4 flex-wrap">
         {posts.map(post => (
           <div key={post.id} className="flex flex-col gap-2 border rounded p-4 border-slate-300">
+            {post.published && <span className="text-xs text-slate-400">published</span>}
             <h3 className="text-lg font-medium">{post.heading}</h3>
             <span className="text-slate-600 text-sm">{new Date(post.created_at).toLocaleDateString()}</span>
             <div className="flex gap-2">
