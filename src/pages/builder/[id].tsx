@@ -14,7 +14,6 @@ const Post = ({ post }) => {
         <Editor />
       </div>
     </main>
-    
   )
 }
 

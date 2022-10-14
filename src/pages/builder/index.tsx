@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { supabase } from '../../utils/supabaseClient'
 
-
 interface Props {}
 
 const Builder: NextPage<Props> = ({}) => {
@@ -21,9 +20,24 @@ const Builder: NextPage<Props> = ({}) => {
       if (posts !== null) setPosts(posts)
       console.log(posts)
     }
-
     loadPosts()
   }, [])
+
+  useEffect(() => {
+    // const subscribe = () => {
+      supabase
+        .channel('*')
+        .on('postgres_changes', { event: 'DELETE', schema: '*' }, payload => {
+          console.log('Change received!', payload)
+          console.log('Posts', posts)
+          setPosts(posts.filter(post => post.id !== payload.old.id)) 
+        })
+        .subscribe()
+    // }
+    
+    // subscribe()
+    return () => {supabase.removeAllChannels()}
+  }, [posts])
 
   const savePost = () => {
     console.log('Saved')
@@ -89,7 +103,7 @@ const Builder: NextPage<Props> = ({}) => {
 
                   if (error) console.error(error)
 
-                  console.log(data)
+                  console.log('DELETED DATA: ', data)
                 }}
                 className="rounded border bg-slate-50 py-1 px-2"
               >delete</button>
@@ -97,8 +111,6 @@ const Builder: NextPage<Props> = ({}) => {
           </div>
         ))}
       </div>
-
-      
     </main>
   )
 }
