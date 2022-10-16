@@ -7,6 +7,7 @@ import Editor from './Editor'
 const Post = ({ post }) => {
   const [heading, setHeading] = useState(post.heading)
   const [desc, setDesc] = useState(post.desc || '')
+  const [editorState, setEditorState] = useState()
   const router = useRouter()
 
   useEffect(() => {
@@ -18,7 +19,7 @@ const Post = ({ post }) => {
   return (
     <main className="container mx-auto flex flex-col items-center min-h-screen p-4 gap-8">
       <div className="editor-shell">
-        <Editor />
+        <Editor state={editorState} setState={setEditorState} />
       </div>
       <div className="flex flex-col gap-2">
         <div>
@@ -33,12 +34,14 @@ const Post = ({ post }) => {
           type='button'
           className='border rounded py-1 px-2 bg-slate-100'
           onClick={async () => {
+            console.log('EDITOR STATE: ', editorState)
             const { data, error } = await supabase
               .from('posts')
               .update({
                 heading,
                 desc,
                 published: true,
+                post_data: editorState,
                 updated_at: new Date(Date.now()).toISOString()
               })
               .eq('id', post.id)

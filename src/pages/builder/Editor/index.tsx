@@ -22,7 +22,7 @@ import Placeholder from "./ui/Placeholder";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
 
-export default function Editor(): JSX.Element {
+export default function Editor({state, setState}): JSX.Element {
   const text = "Enter some plain text...";
   const placeholder = <Placeholder>{text}</Placeholder>;
   const scrollRef = useRef(null);
@@ -78,6 +78,7 @@ export default function Editor(): JSX.Element {
         onClick={() => {
           if (editorStateRef.current) {
             const json = JSON.stringify(editorStateRef.current);
+            setState(json)
             console.log(json);
           }
         }}

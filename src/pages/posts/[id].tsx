@@ -1,76 +1,66 @@
+import { GetStaticPropsContext } from 'next'
+import React, { useEffect, useState } from 'react'
+import { supabase } from '../../utils/supabaseClient'
 import {
   NextPage,
 } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import useSWR from 'swr';
-import { supabase } from "../../utils/supabaseClient";
 import { PostParagraphType, PostsDataType, PostDataType, PostImageType, TextNodeType, PostListType } from "./types";
 import { parseData } from "./utils/parseData";
 
-const fetcher = (url:string) => fetch(url).then((res) => res.json());
-
-interface Props {}
-
-const Posts: NextPage<Props> = () => {
-  const [posts, setPosts] = useState([])
+const Post = ({ post }) => {
+  const [parsedDate, setParsedData] = useState()
 
   useEffect(() => {
-    const loadPosts = async () => {
-      const { data: posts, error} = await supabase
-        .from('posts')
-        .select('*')
-        .eq('published', true)
-
-      if (error) console.error(error)
-
-      if (posts !== null) setPosts(posts)
-      console.log(posts)
-    }
-    loadPosts()
+    console.log('POST in client1: ', post)
+    console.log(JSON.parse(post.post_data).root.children)
   }, [])
-  // const {data, error} = useSWR('/api/staticdata', fetcher)
-  // const [parsedData, setParsedData] = useState<PostsDataType>([])
 
-  // useEffect(() => {
-  //   if (data) {
-  //     console.log("1: ", parseData(data))
-  //     setParsedData(parseData(data))
-  //     console.log('2: ', parsedData)
-  //   }
-  // }, [data])
 
   return (
-    <div className="flex flex-col items-center gap-8 bg-slate-200 min-h-screen w-3/5 mx-auto">
-      <h1 className="text-5xl">Posts</h1>
-      <div className="w-full">
-        <div className="w-full">
-        <div className="flex gap-4 flex-wrap">
-        {posts.map(post => (
-          <div key={post.id} className="flex flex-col gap-2 border rounded p-4 border-slate-300">
-            {post.published && <span className="text-xs text-slate-400">published</span>}
-            <h3 className="text-lg font-medium">{post.heading}</h3>
-            <span className="text-slate-600 text-sm">{new Date(post.created_at).toLocaleDateString()}</span>
-            <Link href={`/posts/${post.id}`}>
-              <a>Read post</a>
-            </Link>
-          </div>
-        ))}
+    <main className="container mx-auto flex flex-col items-center min-h-screen p-4 gap-8">
+      <div className="flex items-end gap-6">
+        <h2 className="text-4xl">{post.heading}</h2>
+        <span className="text-sm text-slate-500">{new Date(post.created_at).toLocaleDateString()}</span>
       </div>
-          {/* {error && <span>Failed to load</span>}
-          {!data ? <span>Loading...</span> : (
-            <div className="flex flex-col gap-1 border rounded-lg w-full">
-              {parsedData.map(renderData)}
-            </div>
-          )} */}
-        </div>
+      
+      <span>{post.desc}</span>
+      <span>Here goes post</span>
+      <div className="flex flex-col gap-1 border rounded-lg w-full">
+        {JSON.parse(post.post_data).root.children.map(renderData)}
       </div>
-    </div>
-  );
-};
+    </main>
+  )
+}
 
-export default Posts;
+export async function getStaticPaths() {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('id')
+    .eq('published', true)
+
+  if (error) return { paths: [], fallback: false}
+
+  const paths = data?.map(post => ({ params: { id: `${post.id}` } }))
+
+  return { paths, fallback: false }
+}
+
+export async function getStaticProps(context: GetStaticPropsContext) {
+  const { data: post, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('id', context.params.id)
+    .single()
+
+  return {
+    props: { post }
+  }
+}
+
+export default Post
 
 const renderData = (rootElement: PostDataType, key: number) => {
   if (rootElement.type === 'heading') {
