@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useState, useEffect } from 'react'
-import { supabase } from '../utils/supabaseClient'
+import { supabase } from '../supabase/supabaseClient'
 import Auth from '../components/Auth'
 import Account from '../components/Account'
 import { Session } from "@supabase/supabase-js";

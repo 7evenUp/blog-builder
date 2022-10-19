@@ -1,7 +1,7 @@
 import { GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { supabase } from '../../utils/supabaseClient'
+import { supabase } from '../../supabase/supabaseClient'
 import Editor from './Editor'
 
 const Post = ({ post }) => {

@@ -1,24 +1,22 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../utils/supabaseClient";
+import { getPosts, PostsResponseError, PostsResponseSuccess } from "../../supabase/getPosts";
+import { supabase } from "../../supabase/supabaseClient";
 
-interface Props {}
+interface Props{}
 
 const Posts: NextPage<Props> = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<PostsResponseSuccess>([]);
 
   useEffect(() => {
     const loadPosts = async () => {
-      const { data: posts, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("published", true);
+      const { data, error }: { data: PostsResponseSuccess, error: PostsResponseError } = await getPosts()
 
       if (error) console.error(error);
 
-      if (posts !== null) setPosts(posts);
-      console.log(posts);
+      if (data !== null) setPosts(data);
+      console.log(data);
     };
     loadPosts();
   }, []);

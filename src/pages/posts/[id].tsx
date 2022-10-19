@@ -1,6 +1,6 @@
 import { GetStaticPropsContext } from 'next'
 import React from 'react'
-import { supabase } from '../../utils/supabaseClient'
+import { supabase } from '../../supabase/supabaseClient'
 
 import EditorStateView from './EditorStateView';
 

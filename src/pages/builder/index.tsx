@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { supabase } from '../../utils/supabaseClient'
+import { supabase } from '../../supabase/supabaseClient'
 
 interface Props {}
 
