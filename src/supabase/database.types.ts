@@ -73,3 +73,5 @@ export interface Database {
     }
   }
 }
+
+export type PostType = Database['public']['Tables']['posts']['Row']

@@ -1,13 +1,14 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { PostType } from "../../supabase/database.types";
 import { getPosts, PostsResponseError, PostsResponseSuccess } from "../../supabase/getPosts";
 import { supabase } from "../../supabase/supabaseClient";
 
 interface Props{}
 
 const Posts: NextPage<Props> = () => {
-  const [posts, setPosts] = useState<PostsResponseSuccess>([]);
+  const [posts, setPosts] = useState<PostType[]>([]);
 
   useEffect(() => {
     const loadPosts = async () => {
