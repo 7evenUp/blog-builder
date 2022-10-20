@@ -4,6 +4,8 @@ import { supabase } from '../../supabase/supabaseClient'
 
 import EditorStateView from './EditorStateView';
 
+// TODO
+
 const Post = ({ post, error }) => {
   if (error) return <h2 className="text-red-500 text-5xl">ERROR: {error.message}</h2>
 

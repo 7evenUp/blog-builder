@@ -12,7 +12,7 @@ export interface Database {
       posts: {
         Row: {
           id: number
-          created_at: string | null
+          created_at: string
           updated_at: string | null
           heading: string | null
           desc: string | null
@@ -21,7 +21,7 @@ export interface Database {
         }
         Insert: {
           id?: number
-          created_at?: string | null
+          created_at?: string
           updated_at?: string | null
           heading?: string | null
           desc?: string | null
@@ -30,7 +30,7 @@ export interface Database {
         }
         Update: {
           id?: number
-          created_at?: string | null
+          created_at?: string
           updated_at?: string | null
           heading?: string | null
           desc?: string | null

@@ -1,7 +1,7 @@
 import { supabase } from "./supabaseClient"
 
 export const getPosts = async () => {
-  return await supabase.from('posts').select('*').eq('published', true);
+  return await supabase.from('posts').select('*')
 }
 
 type PostsResponse = Awaited<ReturnType<typeof getPosts>>

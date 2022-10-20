@@ -2,22 +2,32 @@ import { NextPage } from "next";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { PostType } from "../../supabase/database.types";
-import { getPosts, PostsResponseError, PostsResponseSuccess } from "../../supabase/getPosts";
+import {
+  getPublishedPosts,
+  PublishedPostsResponseError,
+  PublishedPostsResponseSuccess,
+} from "../../supabase/getPublishedPosts";
 
-interface Props{}
+interface Props {}
 
 const Posts: NextPage<Props> = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
 
   useEffect(() => {
     const loadPosts = async () => {
-      const { data, error }: { data: PostsResponseSuccess, error: PostsResponseError } = await getPosts()
+      const {
+        data,
+        error,
+      }: {
+        data: PublishedPostsResponseSuccess;
+        error: PublishedPostsResponseError;
+      } = await getPublishedPosts();
 
       if (error) console.error(error);
 
       if (data !== null) setPosts(data);
-      console.log(data);
     };
+
     loadPosts();
   }, []);
 
@@ -45,12 +55,6 @@ const Posts: NextPage<Props> = () => {
               </div>
             ))}
           </div>
-          {/* {error && <span>Failed to load</span>}
-          {!data ? <span>Loading...</span> : (
-            <div className="flex flex-col gap-1 border rounded-lg w-full">
-              {parsedData.map(renderData)}
-            </div>
-          )} */}
         </div>
       </div>
     </div>
