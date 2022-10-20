@@ -3,7 +3,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { PostType } from "../../supabase/database.types";
 import { getPosts, PostsResponseError, PostsResponseSuccess } from "../../supabase/getPosts";
-import { supabase } from "../../supabase/supabaseClient";
 
 interface Props{}
 
@@ -21,16 +20,6 @@ const Posts: NextPage<Props> = () => {
     };
     loadPosts();
   }, []);
-  // const {data, error} = useSWR('/api/staticdata', fetcher)
-  // const [parsedData, setParsedData] = useState<PostsDataType>([])
-
-  // useEffect(() => {
-  //   if (data) {
-  //     console.log("1: ", parseData(data))
-  //     setParsedData(parseData(data))
-  //     console.log('2: ', parsedData)
-  //   }
-  // }, [data])
 
   return (
     <div className="flex flex-col items-center gap-8 bg-slate-200 min-h-screen w-3/5 mx-auto">
