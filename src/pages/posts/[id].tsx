@@ -17,9 +17,7 @@ const Post = ({
   error: PostResponseError;
 }) => {
   if (!post) return null;
-  if (error)
-    return <h2 className="text-red-500 text-5xl">ERROR: {error.message}</h2>;
-  console.log(post.post_data);
+  if (error) return <h2 className="text-red-500 text-5xl">ERROR: {error.message}</h2>;
 
   return (
     <main className="container mx-auto flex flex-col items-center min-h-screen p-4 gap-8">
