@@ -7,13 +7,17 @@ import {
   TextNodeType,
   PostListType,
 } from "./types";
+import { Json } from "../../supabase/database.types";
 
-const EditorStateView = ({ data }: { data: string }) => {
+const EditorStateView = ({ data }: { data: Json }) => {
   if (!data) return null;
 
   return (
     <div className="flex flex-col gap-1 border rounded-lg w-full">
-      {JSON.parse(data).root.children.map(renderData)}
+      {
+        // @ts-ignore
+        JSON.parse(data).root.children.map(renderData)
+      }
     </div>
   );
 };
@@ -86,8 +90,10 @@ const renderTextNode = (textNode: TextNodeType) => {
     return <React.Fragment>{textNode.text}</React.Fragment>;
   else if (textNode.format === 1) return <b>{textNode.text}</b>;
   else if (textNode.format === 2) return <i>{textNode.text}</i>;
-  else if (textNode.format === 4) return <span className="line-through">{textNode.text}</span>;
-  else if (textNode.format === 8) return <span className="underline">{textNode.text}</span>;
+  else if (textNode.format === 4)
+    return <span className="line-through">{textNode.text}</span>;
+  else if (textNode.format === 8)
+    return <span className="underline">{textNode.text}</span>;
   else if (textNode.format === 32) return <sub>{textNode.text}</sub>;
   else if (textNode.format === 64) return <sup>{textNode.text}</sup>;
 };
