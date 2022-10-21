@@ -1,36 +1,32 @@
 import { GetStaticPropsContext } from "next";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import {
-  getPostById,
-  PostResponseError,
-  PostResponseSuccess,
-} from "../../supabase/getPostById";
-import {
-  getPosts,
-  PostsResponseError,
-  PostsResponseSuccess,
-} from "../../supabase/getPosts";
-import {
-  publishPost,
-  PublishPostResponseError,
-  PublishPostResponseSuccess,
-} from "../../supabase/publishPost";
-import { supabase } from "../../supabase/supabaseClient";
+import { getPostById, PostResponseSuccess } from "../../supabase/getPostById";
+import { getPosts } from "../../supabase/getPosts";
+import { publishPost } from "../../supabase/publishPost";
 import Editor from "./Editor";
 
-// TODO
-
-const Post = ({ post }: {post: PostResponseSuccess}) => {
-  if (post === null) return null
+const Post = ({ post }: { post: PostResponseSuccess }) => {
+  if (post === null) return null;
 
   const [heading, setHeading] = useState(post.heading || "");
   const [desc, setDesc] = useState(post.desc || "");
-  const [editorState, setEditorState] = useState();
+  const [editorState, setEditorState] = useState(null);
 
   useEffect(() => {
     console.log("POST in client: ", post);
   }, []);
+
+  const handleButtonClick = async () => {
+    console.log("EDITOR STATE: ", editorState);
+    const { data, error } = await publishPost({
+      ...post,
+      post_data: editorState,
+      published: true,
+      updated_at: new Date(Date.now()).toISOString(),
+    });
+
+    console.log(data);
+  };
 
   return (
     <main className="container mx-auto flex flex-col items-center min-h-screen p-4 gap-8">
@@ -57,29 +53,7 @@ const Post = ({ post }: {post: PostResponseSuccess}) => {
         <button
           type="button"
           className="border rounded py-1 px-2 bg-slate-100"
-          onClick={async () => {
-            console.log("EDITOR STATE: ", editorState);
-            // const {
-            //   data,
-            //   error,
-            // }: {
-            //   data: PublishPostResponseSuccess;
-            //   error: PublishPostResponseError;
-            // } = publishPost({ ...post, post_data: editorState });
-
-            const { data, error } = await supabase
-              .from('posts')
-              .update({
-                heading,
-                desc,
-                published: true,
-                post_data: editorState,
-                updated_at: new Date(Date.now()).toISOString()
-              })
-              .eq('id', post.id)
-
-            console.log(data);
-          }}
+          onClick={handleButtonClick}
         >
           Publish
         </button>
@@ -89,13 +63,7 @@ const Post = ({ post }: {post: PostResponseSuccess}) => {
 };
 
 export async function getStaticPaths() {
-  const {
-    data,
-    error,
-  }: {
-    data: PostsResponseSuccess;
-    error: PostsResponseError
-  } = await getPosts();
+  const { data, error } = await getPosts();
 
   if (error) return { paths: [], fallback: false };
 
@@ -106,11 +74,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   if (typeof context.params?.id === "string") {
-    const {
-      data,
-      error,
-    }: { data: PostResponseSuccess; error: PostResponseError } =
-      await getPostById(context.params.id);
+    const { data, error } = await getPostById(context.params.id);
 
     return {
       props: { post: data },
