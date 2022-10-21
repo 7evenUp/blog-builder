@@ -1,11 +1,10 @@
 import { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { createPost } from "../../supabase/createPost";
+import { deletePost } from "../../supabase/deletePost";
 import { getPosts, PostsResponseSuccess } from "../../supabase/getPosts";
-import { supabase } from "../../supabase/supabaseClient";
-
-// TODO
 
 interface Props {}
 
@@ -20,25 +19,24 @@ const Builder: NextPage<Props> = ({}) => {
       if (error) console.error(error);
 
       if (posts !== null) setPosts(data);
-      console.log(posts);
     };
     loadPosts();
   }, []);
 
-  const savePost = () => {
-    console.log("Saved");
-  };
-
-  const uploadPost = () => {
-    console.log("Uploaded");
-  };
-
-  const handleNewPostClick = async () => {
-    const { data, error } = await createPost("New Post1")
+  const handleCreateNewPost = async () => {
+    const { data, error } = await createPost("New Post1");
 
     if (error) console.error(error);
 
     if (data) router.push(`/builder/${data.id}`);
+  };
+
+  const handleDeletePost = async (id: number) => {
+    const { data, error } = await deletePost(id);
+
+    if (error) console.error(error);
+
+    console.log("DELETED DATA: ", data);
   };
 
   return (
@@ -51,7 +49,7 @@ const Builder: NextPage<Props> = ({}) => {
 
       <button
         className="border rounded-md text-lg py-1 px-3 hover:bg-cyan-600 duration-200 hover:text-white"
-        onClick={handleNewPostClick}
+        onClick={handleCreateNewPost}
       >
         New Post
       </button>
@@ -71,27 +69,11 @@ const Builder: NextPage<Props> = ({}) => {
                 {new Date(post.created_at).toLocaleDateString()}
               </span>
               <div className="flex gap-2">
+                <Link href={`/builder/${post.id}`}>
+                  <a className="rounded border bg-slate-50 py-1 px-2">edit</a>
+                </Link>
                 <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push(`/builder/${post.id}`);
-                  }}
-                  className="rounded border bg-slate-50 py-1 px-2"
-                >
-                  edit
-                </button>
-                <button
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    const { data, error } = await supabase
-                      .from("posts")
-                      .delete()
-                      .eq("id", post.id);
-
-                    if (error) console.error(error);
-
-                    console.log("DELETED DATA: ", data);
-                  }}
+                  onClick={() => handleDeletePost(post.id)}
                   className="rounded border bg-slate-50 py-1 px-2"
                 >
                   delete
